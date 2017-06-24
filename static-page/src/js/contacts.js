@@ -115,7 +115,7 @@ c = {
                     fe.push(parseInt(e));
                 }
             });
-            ajax("/api/partner",function(e){
+            ajax(apiBase + "/api/partner",function(e){
                 byTag(byId("contactsInfoBlock"),"span")[0].style.display="inline";
                 byTag(byId("contactsInfoBlock"),"span")[1].className="hide";
                 c.renderBankData(e);
@@ -166,7 +166,7 @@ c = {
     invite:function(){
         byId("messageBG").click();
         if (c.inviteP.length>0) {
-            ajax("/api/partner", function () {
+            ajax(apiBase + "/api/partner", function () {
                 drawInfo("Ваше запрошення буде доставлене контрагентам");
             }, JSON.stringify(c.inviteP), function () {
             }, "PUT");
@@ -197,7 +197,7 @@ c = {
         byId("selectFileContacts").onchange = function () {
             byId("uploadFileContacts").click();
         };
-        ajax("/api/partner", function(e){
+        ajax(apiBase + "/api/partner", function(e){
             byTag(byId("contactsInfoBlock"),"span")[0].style.display="none";
             byTag(byId("contactsInfoBlock"),"span")[1].className="";
             c.renderBankData(e);

@@ -1,0 +1,5 @@
+gradle build
+gradle shadowJar
+
+java -jar papka-170622.jar
+docker run -p 127.0.0.1:9042:9042 -i -t scylladb/scylla

@@ -122,7 +122,7 @@ actionCore = {
             rmClass(byClass(byId("loginForm"), "error")[0], "hide");
             byTag(byId("loginForm"), "BUTTON")[0].innerHTML = buttonText;
         } else {
-            ajax("/api/login", function (result) {
+            ajax(apiBase + "/api/login", function (result) {
                 // Success
                 byTag(byId("loginForm"), "BUTTON")[0].innerHTML = buttonText;
                 byTag(byId("loginForm"), "INPUT")[1].value = "";
@@ -287,7 +287,7 @@ actionCore = {
                 });
                 // Fix bugs with tags list
                 if (userConfig.tagList.length!=tags.length){
-                    ajax("/api/login/tags/0",function(){},JSON.stringify(userConfig.tagList),function(){},"PUT");
+                    ajax(apiBase + "/api/login/tags/0",function(){},JSON.stringify(userConfig.tagList),function(){},"PUT");
                 }
             }
         } else {
@@ -331,7 +331,7 @@ actionCore = {
                 actionWizard["step"+step]();
             }
         } else if (window.location.pathname.indexOf("/enablecloud/")==0){
-            ajax("/api/login/cloud/on", function () {
+            ajax(apiBase + "/api/login/cloud/on", function () {
                 window.location = "/";
             })
         }else if(window.location.pathname.indexOf('cleanup') != -1){
@@ -362,7 +362,7 @@ actionCore = {
         if (typeof grecaptcha == "undefined"){
             loadJs("https://www.google.com/recaptcha/api.js?render=explicit&hl=uk");
         }
-        ajax("/api/login", function () {
+        ajax(apiBase + "/api/login", function () {
             localStorage.removeItem("sessionId");
             userConfig.docs=[];
         }, "", function () {
@@ -390,7 +390,7 @@ actionCore = {
             byId("messageBG").click();
         }
         // hash from text "createCompany"
-        ajax("/api/company/create", function (result) {
+        ajax(apiBase + "/api/company/create", function (result) {
             userConfig.company = JSON.parse(result);
             userConfig.company.iamboss=true;
             userConfig.company.login = userConfig.login;
@@ -409,7 +409,7 @@ actionCore = {
         }
         // hash from text "createCompany"
         cpGUI.signHash("w85F+R4rQoMTkHsIWmvrsIClW9jr7DZxCZDgnOxEag8=",function(result){
-            ajax("/api/company/create",function (result) {
+            ajax(apiBase + "/api/company/create",function (result) {
                 userConfig.company = JSON.parse(result);
                 byId("userName").innerHTML = "<span>"+userConfig.fullName+"</span><br>"+"<a onclick='actionCore.drawCompanyManager()' class='loginLink'>"+userConfig.company.name+" <i class='fa fa-caret-down'></i></a>";
                 actionCore.drawCompanyManager();
@@ -498,7 +498,7 @@ actionCore = {
             waitingForWs : !!temp.failTimer.length
         };
         localStorage.setItem('lastTimeCleanup', (new Date()).getTime());
-        ajax("/api/report/cleanup", function () {
+        ajax(apiBase + "/api/report/cleanup", function () {
             var sessionId = localStorage.getItem('sessionId');
             localStorage.clear();
             localStorage.setItem('sessionId', sessionId);

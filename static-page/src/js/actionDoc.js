@@ -215,7 +215,7 @@ actionDoc = {
 
         actionDoc.getDocument(id, function(doc){
             if (doc == null) { //try to get resources from groups
-                ajax('/api/resource/' + id, function (groupsDoc) {
+                ajax(apiBase + '/api/resource/' + id, function (groupsDoc) {
                     groupsDoc = JSON.parse(groupsDoc);
                     userConfig.doc = groupsDoc;
                     actionDoc.actualRenderDocument(groupsDoc);
@@ -353,12 +353,12 @@ actionDoc = {
 
         userConfig.cache.signList=[];
         actionDoc.signs = [];
-        ajax("/api/sign/" + userConfig.docId, actionDoc.updateSignList, null, function () {
+        ajax(apiBase + "/api/sign/" + userConfig.docId, actionDoc.updateSignList, null, function () {
             console.warn("Can't get signs for res", userConfig.docId)
         });
 
         window.setTimeout(function(){
-            ajax("/api/share/" + userConfig.docId, actionDoc.updateShareList, null, function () {
+            ajax(apiBase + "/api/share/" + userConfig.docId, actionDoc.updateShareList, null, function () {
                 console.warn("Can't get sharing for res", userConfig.docId)
             });
         }, 50);
@@ -487,12 +487,12 @@ actionDoc = {
                             }
                             if (docs.length==0) {
                                 doc.tags = configTag;
-                                ajax("/api/resource/tag/" + doc.id, function () {}, doc.tags, function () {}, "PUT");
+                                ajax(apiBase + "/api/resource/tag/" + doc.id, function () {}, doc.tags, function () {}, "PUT");
                             } else {
                                 foreach(docs, function(id){
                                     window.documentsCollection.get(id).set('tags', configTag);
                                 });
-                                ajax("/api/resource/tags/" + docs.join("_"), function () {
+                                ajax(apiBase + "/api/resource/tags/" + docs.join("_"), function () {
                                     window.documentsCollection.renderDocuments();
                                 }, configTag, function () {}, "PUT");
                             }
@@ -548,7 +548,7 @@ actionDoc = {
                     var dn = docName;
                     return function(){
                         drawMessage("<div style='margin:50px 40px'>" + loaderSnippet + "</div>", 200, true, 200);
-                        ajaxRaw("/api/resource/withsign/" + id, function (doc) {
+                        ajaxRaw(apiBase + "/api/resource/withsign/" + id, function (doc) {
                             saveAs(b64toBlob(doc), "Підписаний_" + dn.replace(/[,|<>\?\*\/\\:]/g, "") + ".pdf");
                             byId("messageBG").click();
                         }, function (e) {
@@ -635,14 +635,14 @@ actionDoc = {
         if(hasClass(byId("shareAllLink").parentNode,"active")){
             rmClass(byId("shareAllLink").parentNode,"active");
             setTimeout(function(){
-                ajax("/api/resource/shareall/"+userConfig.docId,function(){},"",function(){},"DELETE");
+                ajax(apiBase + "/api/resource/shareall/"+userConfig.docId,function(){},"",function(){},"DELETE");
             },10);
             // FIXME change status depends on shared people
             actionDoc.getDocument(userConfig.docId).status=5;
         } else {
             addClass(byId("shareAllLink").parentNode,"active");
             setTimeout(function(){
-                ajax("/api/resource/shareall/"+userConfig.docId,function(){},"",function(){},"PUT");
+                ajax(apiBase + "/api/resource/shareall/"+userConfig.docId,function(){},"",function(){},"PUT");
             },10);
             actionDoc.getDocument(userConfig.docId).status=6;
         }
@@ -690,7 +690,7 @@ actionDoc = {
                 });
                 id = docs.join("_");
             }
-            ajax("/api/share/" + id, actionDoc.updateShareList, JSON.stringify({requestList:requests}), function (error) {
+            ajax(apiBase + "/api/share/" + id, actionDoc.updateShareList, JSON.stringify({requestList:requests}), function (error) {
                 console.warn(error)
             }, "POST");
             byTag(byId("emailShareInput").parentNode.parentNode,"TEXTAREA")[0].value="";
@@ -760,7 +760,7 @@ actionDoc = {
                                         var share = el;
                                         var localDoc = doc;
                                         return function () {
-                                            ajax("/api/share/" + localDoc.id + "/" + share.user, function () {
+                                            ajax(apiBase + "/api/share/" + localDoc.id + "/" + share.user, function () {
                                                 foreach(document.querySelectorAll('#openDocInfo .shareItemEmail'), function () {
                                                     var u = share.user;
                                                     return function (e) {
@@ -1078,7 +1078,7 @@ actionDoc = {
                     hashSign.push(Sha256.hash(sign));
                     hashMap[h]={sign:sign,result:null,time:null};
                 });
-                ajax("/api/sign/cache",function(e){
+                ajax(apiBase + "/api/sign/cache",function(e){
                     var signs = JSON.parse(e);
                     var h;
                     foreach(signs, function(s){
@@ -1096,7 +1096,7 @@ actionDoc = {
                         }
                     }
                     if (newSign.length>0){
-                        ajax("/api/sign/cache",function(e){
+                        ajax(apiBase + "/api/sign/cache",function(e){
                             var signs = JSON.parse(e);
                             foreach(signs, function(s){
                                 var si = JSON.parse(s);
@@ -1542,9 +1542,9 @@ actionDoc = {
      */
     loadDocuments: function (callback) {
         userConfig.docs=[];
-        var searchUrl = "/api/resource/search";
+        var searchUrl = apiBase + "/api/resource/search";
         if (userConfig.company.login=="all"){
-            searchUrl = "/api/company/search/"+userConfig.company.companyId;
+            searchUrl = apiBase + "/api/company/search/"+userConfig.company.companyId;
         }
         ajax(searchUrl, function (result) {
             userConfig.docs = JSON.parse(result);
@@ -1612,7 +1612,7 @@ actionDoc = {
             if(window.documentsCollection.fullCollection){
                 window.documentsCollection.deleteDocument(temp);
             }
-            ajax("/api/resource/" + this.docId, function () {
+            ajax(apiBase + "/api/resource/" + this.docId, function () {
                 history.replaceState({renderType: "list", docList: userConfig.docList}, "", "/list/" + userConfig.docList);
                 if(!window.documentsCollection.fullCollection){
                     window.documentsCollection.deleteDocument(temp);
@@ -1621,7 +1621,7 @@ actionDoc = {
                 drawChangeInfo("Документ був видалений", function(){
                     var id = dId;
                     return function(){
-                        ajax("/api/resource/restore/" + id, function () {
+                        ajax(apiBase + "/api/resource/restore/" + id, function () {
                             window.documentsTrashCollection.restoreDocument(id);
                         },"", function(){},"PUT");
                     }
@@ -1635,7 +1635,7 @@ actionDoc = {
             if(window.documentsCollection.fullCollection){
                 window.documentsCollection.deleteDocument(docs);
             }
-            ajax("/api/resource/" + docs.join("_"), function () {
+            ajax(apiBase + "/api/resource/" + docs.join("_"), function () {
                 history.replaceState({renderType: "list", docList: userConfig.docList}, "", "/list/" + userConfig.docList);
                 if(!window.documentsCollection.fullCollection){
                     window.documentsCollection.deleteDocument(docs);
@@ -1647,7 +1647,7 @@ actionDoc = {
                         var id = docs.join("_");
                         return function(){
                             window.documentsTrashCollection.restoreDocument(docs);
-                            ajax("/api/resource/restore/" + id, function () {
+                            ajax(apiBase + "/api/resource/restore/" + id, function () {
                             },"", function(){},"PUT");
                         }
                     }(), 5000);
@@ -1663,7 +1663,7 @@ actionDoc = {
         foreach(byClass(byId("contentBlock"), "selected", "TR"), function (el) {
             docs.push(el.getAttribute('docId'));
         });
-        ajax("/api/resource/restore/" + docs.join("_"), function () {
+        ajax(apiBase + "/api/resource/restore/" + docs.join("_"), function () {
             window.documentsTrashCollection.restoreDocument(docs);
         }, "", function(){}, "PUT");
     },
@@ -2089,12 +2089,12 @@ actionDoc = {
             temp.attributes.name = byTag(byId("openDocMenu"), "INPUT")[0].value;
         }
 
-        ajax("/api/resource/name/" + dId, function (text) {
+        ajax(apiBase + "/api/resource/name/" + dId, function (text) {
             drawChangeInfo("Документ перейменований на '"+text+"'", function(){
                 var id = dId;
 
                 return function(){
-                    ajax("/api/resource/name/" + id, function (text) {
+                    ajax(apiBase + "/api/resource/name/" + id, function (text) {
                         window.documentsCollection.get(dId).attributes.name = text;
                         if (byId("openDocMenu")){
                             byTag(byId("openDocMenu"), "INPUT")[0].value = text;
@@ -2174,7 +2174,7 @@ actionDoc = {
                                 SN = signInfo[i].cert.issuer.SN;
                             }
                             if (!cpGUI.coreCert.hasOwnProperty(SN)) {
-                                ajax("/api/report/signError", function () {}, JSON.stringify(signInfo[i]), function () {});
+                                ajax(apiBase + "/api/report/signError", function () {}, JSON.stringify(signInfo[i]), function () {});
                                 localStorage.removeItem("CryptoPluginKeyStore");
                                 var issuerDescription = "";
                                 if (signInfo[i].cert && signInfo[i].cert.issuer && signInfo[i].cert.issuer.hasOwnProperty("CN") && signInfo[i].cert.issuer.CN) {
@@ -2202,7 +2202,7 @@ actionDoc = {
                             }
                             if (Object.keys(newSigns).length>0) {
                                 var docId = Object.keys(newSigns)[0];
-                                ajax("/api/sign/0", function (listJSON) {
+                                ajax(apiBase + "/api/sign/0", function (listJSON) {
                                     listJSON = JSON.parse(listJSON);
                                     var result = {};
                                     if (isArray(listJSON)){
@@ -2421,13 +2421,13 @@ actionDoc = {
                 update += (1<<i);
             });
 
-            ajax("/api/login/tags/"+update,function(){
+            ajax(apiBase + "/api/login/tags/"+update,function(){
                 if (userConfig.docId){
                     actionDoc.getDocument(userConfig.docId,function(doc){
                         foreach(replaceTags,function(tag){
                             doc.tags |= (1 << tag);
                         });
-                        ajax("/api/resource/tag/"+userConfig.docId,function(){},doc.tags,function(){},"PUT");
+                        ajax(apiBase + "/api/resource/tag/"+userConfig.docId,function(){},doc.tags,function(){},"PUT");
                     });
                 }
             },JSON.stringify(newTags),function(){},"PUT");
@@ -2631,7 +2631,7 @@ actionDoc = {
                                 }
                             }
                             if (!cpGUI.coreCert.hasOwnProperty(SN)) {
-                                ajax("/api/report/signError", function () {}, JSON.stringify(signInfo[i]), function () {});
+                                ajax(apiBase + "/api/report/signError", function () {}, JSON.stringify(signInfo[i]), function () {});
                                 localStorage.removeItem("CryptoPluginKeyStore");
                                 var errorText = "Вибачте, зараз ми не підтримуємо сертифікати видані";
                                 if (CN && SN){
@@ -2664,7 +2664,7 @@ actionDoc = {
                             }
                             for(var s in newSigns){
                                 if (newSigns.hasOwnProperty(s)) {
-                                    ajax("/api/externalSign/" + res.id, function(){
+                                    ajax(apiBase + "/api/externalSign/" + res.id, function(){
                                         window.location.replace(res.redirectURL);
                                     }, newSigns[s], function (e) {
                                         console.warn("Can't add sign", e);

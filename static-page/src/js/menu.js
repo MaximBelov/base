@@ -41,7 +41,7 @@ m = {
                     drawWarning("Пароль повинен бути мінімум 6 символів")
                 }, 50)
             } else {
-                ajax("/api/login/password", function () {
+                ajax(apiBase + "/api/login/password", function () {
                     drawMessage("<br>Пароль змінено <i class='fa fa-smile-o fa-lg'></i><br><br>");
                 }, byId("newPassword").value, function () {
                 }, "PUT");
@@ -52,7 +52,7 @@ m = {
         addEvent(btns[1],"click", function() {
             userConfig.fullName = byId("newName").value;
             byId("userName").innerHTML=byId("newName").value;
-            ajax("/api/login/name",function(){
+            ajax(apiBase + "/api/login/name",function(){
             }, byId("newName").value,function(){},"PUT");
             byId("messageBG").click();
         });
@@ -75,7 +75,7 @@ m = {
             var checker = this;
             if(checker.checked){
                 byId("qrGoogleAuth").src = "/img/three-dots.svg";
-                ajax("/api/login/otp/",function(result){
+                ajax(apiBase + "/api/login/otp/",function(result){
                     m.otp = result;
                     rmClass(byId("qrGoogleAuthConfig"), "hide");
                     addClass(byId("mainMenuBlock"), "hide");
@@ -85,7 +85,7 @@ m = {
                     checker.checked = true;
                 },"GET");
             } else {
-                ajax("/api/login/otp/",function(){
+                ajax(apiBase + "/api/login/otp/",function(){
                     addClass(byId("qrGoogleAuthConfig"), "hide");
                 }, null, function(){
                     checker.checked = true;
@@ -107,7 +107,7 @@ m = {
     },
     setOTP: function(){
         if (byId("newOTPPassword").value.length==6) {
-            ajax("/api/login/otp/"+byId("newOTPPassword").value, function () {
+            ajax(apiBase + "/api/login/otp/"+byId("newOTPPassword").value, function () {
                 drawMessage("<br>Двоетапна перевірка підключена.<br><br>")
             }, m.otp, function (e) {
                 alert("Невірний код. Можливо необхідно сінхронізувати час на вашому девайсі.");

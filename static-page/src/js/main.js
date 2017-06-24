@@ -43,14 +43,14 @@ addEvent(window, "load", function () {
         }
         window.onerror = function (message, file, line, col, error) {
             var e = {message: message, file: file, line: line, col: col, error: error};
-            ajax("/api/report/jsError", function () {
+            ajax(apiBase + "/api/report/jsError", function () {
             }, JSON.stringify(e) + ", userAgent: '" + navigator.userAgent + "', platform:'" + navigator.platform + "', url: '" + window.location.href + "', version: '" + version + "'", function () {
             });
         };
         // Only Chrome & Opera have an error attribute on the event.
         window.addEventListener("error", function (e) {
             if (e.hasOwnProperty("error") && e.error && JSON.stringify(e.error).length > 2) {
-                ajax("/api/report/jsError", function () {
+                ajax(apiBase + "/api/report/jsError", function () {
                 }, JSON.stringify(e.error) + ", userAgent: '" + navigator.userAgent + "', platform:'" + navigator.platform + "', url: '" + window.location.href + "', version: '" + version + "'", function () {
                 });
             }
@@ -268,8 +268,8 @@ addEvent(window, "load", function () {
             byId("firstPage").innerHTML = "";
             rmClass(byId("firstPage"), "hide");
             ajax((externalId)?
-                    ("/api/externalSign/"+externalId):
-                    ("/api/resource/shareall/" + location.pathname.substr(7)),
+                    (apiBase + "/api/externalSign/"+externalId):
+                    (apiBase + "/api/resource/shareall/" + location.pathname.substr(7)),
                 function (res) {
                     res = JSON.parse(res);
                     res.id = externalId ? externalId : res.id;
@@ -389,7 +389,7 @@ addEvent(window, "load", function () {
         actionCore.resizeContext();
         // Check if session is exist in cookie
         if (localStorage.getItem("sessionId")) {
-            ajax("/api/login", function (result) {
+            ajax(apiBase + "/api/login", function (result) {
                 // session is exist
                 actionCore.startToWork(result);
             }, null, function (e) {

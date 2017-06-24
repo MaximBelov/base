@@ -92,7 +92,7 @@ var DocumentChat = function(options){
         var valueTarget = this.el.querySelector('.chatInput'),
             data = valueTarget.value;
         if(!valueTarget.value){return;}
-        ajax('/api/chat/'+this.chatId, function(json){
+        ajax(apiBase + '/api/chat/'+this.chatId, function(json){
             var parsed = JSON.parse(json);
             this.addMessage(parsed);
         }.bind(this), data, function(){
@@ -166,7 +166,7 @@ var DocumentChat = function(options){
         };
         this.remove = function(){
             ajax(
-                '/api/chat/'+window.documentChat.chatId+'/'+this.get('time'),
+                apiBase + '/api/chat/'+window.documentChat.chatId+'/'+this.get('time'),
                 function(){
                     if(hasClass(this.el, 'logo') && hasClass(this.el.nextSibling, 'authorMessage')){
                         addClass(this.el.nextSibling, 'logo');
@@ -195,7 +195,7 @@ var DocumentChat = function(options){
         return this.initialize(attr);
     };
     this.loadChatHistory = function(){
-        ajax('/api/chat/'+this.chatId, function(json){
+        ajax(apiBase + '/api/chat/'+this.chatId, function(json){
             var parsed = JSON.parse(json);
             if(parsed.length > 0){
                 rmClass(this.el.parentNode.parentNode, 'inactive'); //fixme should be better

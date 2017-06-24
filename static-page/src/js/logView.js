@@ -34,7 +34,7 @@ logView = {
     getDayLog: function () {
         var logDay = byId("logDay").value;
         var logUser = byId("logUser").value;
-        var request = "/api/admin/log/20160406";
+        var request = apiBase + "/api/admin/log/20160406";
         ajax(request, function (result) {
             byId("getLogResult").value = result;
         }, null, function () {

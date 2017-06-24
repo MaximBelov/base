@@ -690,7 +690,7 @@ var DocumentsTrashCollection = function(models, options){
                 offset : offset || this.offset,
                 limit : limit || this.limit
             };
-        window.ajaxAbort = ajax('/api/resource/search', function(docs){
+        window.ajaxAbort = ajax(apiBase + '/api/resource/search', function(docs){
             var statusFlag = userConfig.docList != 'trash';
             docs = JSON.parse(docs);
             docs = docs.reduce(function(memo, el){ //FIXME НЕ ДОЛЖНО БЫТЬ ФИЛЬТРАЦИИ ОТВЕТОВ ОТ СЕРВЕРА!

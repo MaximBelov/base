@@ -424,7 +424,7 @@ var DocumentsCollection = function(models, options){
                 )
             }
             actionDoc.updateShareList(JSON.stringify(tempShare));
-            ajax("/api/sign/" + doc.id, function(arr){
+            ajax(apiBase + "/api/sign/" + doc.id, function(arr){
                 if(JSON.parse(arr).length != userConfig.cache.signList.length){
                     userConfig.cache.signList=[];
                     actionDoc.signs = [];
@@ -434,7 +434,7 @@ var DocumentsCollection = function(models, options){
                 console.warn("Can't get signs for res", userConfig.docid)
             });
             window.setTimeout(function(){
-                ajax("/api/share/" + doc.id, actionDoc.updateShareList, null, function () {
+                ajax(apiBase + "/api/share/" + doc.id, actionDoc.updateShareList, null, function () {
                     console.warn("Can't get sharing for res", userConfig.docid)
                 });
             }, 50);
@@ -921,7 +921,7 @@ var DocumentsCollection = function(models, options){
         if(searchObj.signed !== null || searchObj.searchQuery || searchObj.contractor || searchObj.dateFrom || searchObj.dateTo || typeof userConfig.tagFilter == 'number' || userConfig.docList != 'docs'){
             addFlag = true;
         }
-        window.ajaxAbort = ajax('/api/resource/search', function(docs){
+        window.ajaxAbort = ajax(apiBase + '/api/resource/search', function(docs){
             var statusFlag = userConfig.docList != 'trash';
             docs = JSON.parse(docs);
             docs = docs.reduce(function(memo, el){ //FIXME НЕ ДОЛЖНО БЫТЬ ФИЛЬТРАЦИИ ОТВЕТОВ ОТ СЕРВЕРА!

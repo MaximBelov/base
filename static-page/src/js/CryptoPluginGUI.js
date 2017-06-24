@@ -614,7 +614,7 @@ if (typeof cpGUI === "undefined") {
                         /** @namespace data.crashLog */
                         if (cpGUI.plugin) {
                             if (typeof data !== "undefined" && data.hasOwnProperty("crashLog") && typeof data.crashLog !== "undefined" && data.crashLog.length > 0) {
-                                ajax("/api/report/crash", function () {
+                                ajax(apiBase + "/api/report/crash", function () {
                                 }, data.crashLog, function () {
                                 });
                             }
@@ -886,10 +886,10 @@ if (typeof cpGUI === "undefined") {
                 cpGUI.finalFunction();
                 return;
             }
-            ajax("/api/sign/cloud/"+(cpGUI.hash.hasOwnProperty("documents")?"":userConfig.docId),function(e){
+            ajax(apiBase + "/api/sign/cloud/"+(cpGUI.hash.hasOwnProperty("documents")?"":userConfig.docId),function(e){
                 window.location.href=e;
             }, JSON.stringify((cpGUI.hash.hasOwnProperty("documents")?cpGUI.hash.documents:cpGUI.hash)) ,function(e){
-                ajax("/api/report/pluginerror", function () {}, "code: "+e+", message: Ошибка запроса в облако", function () {});
+                ajax(apiBase + "/api/report/pluginerror", function () {}, "code: "+e+", message: Ошибка запроса в облако", function () {});
                 if (byId("CryptoPluginSubBlock")) {
                     byId("CryptoPluginSubBlock").innerHTML = "<br><br>Виникла помилка роботи з хмарою: " + e +
                         "<br><br><a class='legend' onclick='localStorage.removeItem(\"CryptoPluginKeyStore\"); cpGUI.drawKeyStoreTypeSelector()'>Обрати інший ключ</a>";
@@ -904,10 +904,10 @@ if (typeof cpGUI === "undefined") {
                 cpGUI.finalFunction();
                 return;
             }
-            ajax("/api/sign/clientcloud/"+(cpGUI.hash.hasOwnProperty("documents")?"":userConfig.docId),function(e){
+            ajax(apiBase + "/api/sign/clientcloud/"+(cpGUI.hash.hasOwnProperty("documents")?"":userConfig.docId),function(e){
                 window.location.href=e;
             }, JSON.stringify((cpGUI.hash.hasOwnProperty("documents")?cpGUI.hash.documents:cpGUI.hash)) ,function(e){
-                ajax("/api/report/pluginerror", function () {}, "code: "+e+", message: Ошибка запроса в облако", function () {});
+                ajax(apiBase + "/api/report/pluginerror", function () {}, "code: "+e+", message: Ошибка запроса в облако", function () {});
                 if (byId("CryptoPluginSubBlock")) {
                     byId("CryptoPluginSubBlock").innerHTML = "<br><br>Виникла помилка роботи з хмарою: " + e +
                         "<br><br><a class='legend' onclick='localStorage.removeItem(\"CryptoPluginKeyStore\"); cpGUI.drawKeyStoreTypeSelector()'>Обрати інший ключ</a>";
@@ -1438,7 +1438,7 @@ if (typeof cpGUI === "undefined") {
             }
             if (cpGUI.lastPluginError.indexOf(error.source+error.code)==-1) {
                 cpGUI.lastPluginError.push(error.source+error.code);
-                ajax("/api/report/pluginerror", function () {
+                ajax(apiBase + "/api/report/pluginerror", function () {
                 }, "code: " + error.code + ", source: " + error.source + ", message: " + error.message + ", userAgent: '" + navigator.userAgent + "', platform:'" + navigator.platform + "', info:" + JSON.stringify(info), function () {
                 });
             }

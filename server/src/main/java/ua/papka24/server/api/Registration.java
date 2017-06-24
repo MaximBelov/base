@@ -77,7 +77,7 @@ public class Registration extends REST {
                     || data.getCaptcha() == null
                     || data.getCaptcha().length()==0
                     || data.getLogin() == null
-                    || !EmailHelper.validate(data.getLogin())
+                    //|| !EmailHelper.validate(data.getLogin())
                     || !CaptchaHelper.checkCaptcha(data.getCaptcha(), null)) {
                 return ERROR_BAD_REQUEST;
             } else {
@@ -87,7 +87,10 @@ public class Registration extends REST {
                     // Установка
                     map.put(secret, data);
                     RedisDAOManager.getInstance().saveRegResInfo(secret,jsonRequest);
-                    EmailHelper.sendInviteEmail(data.getLogin(), data.getName(), secret);
+
+                    System.out.println("secret is: " + secret);
+
+                    //EmailHelper.sendInviteEmail(data.getLogin(), data.getName(), secret);
                     return Response.ok().build();
                 } else {
                     return ERROR_CONFLICT;
@@ -152,7 +155,7 @@ public class Registration extends REST {
             // Установка
             restoreMap.put(secret, email);
             RedisDAOManager.getInstance().saveRegResInfo(secret,email);
-            EmailHelper.sendResetPasswordEmail(email, user.getFullName(), secret);
+            //EmailHelper.sendResetPasswordEmail(email, user.getFullName(), secret);
             return Response.ok().build();
         }
     }

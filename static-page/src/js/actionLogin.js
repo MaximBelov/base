@@ -91,7 +91,7 @@ var actionLogin = {
                 return function () {
                     json.captcha = grecaptcha.getResponse();
                     addClass(byId("captcha"), "hide");
-                    ajax("/api/reg/", function () {
+                    ajax(apiBase + "/api/reg/", function () {
                         rmClass(byClass(parent, "title", "DIV")[0], "hide");
                         rmClass(byClass(parent, "fox", "DIV")[0], "hide");
                     }, JSON.stringify(json), function (errorCode) {
@@ -120,7 +120,7 @@ var actionLogin = {
             if (secret.indexOf("?") > 0){
                 secret = secret.substring(0, secret.indexOf("?"));
             }
-            ajax("/api/reg/", function (login) {
+            ajax(apiBase + "/api/reg/", function (login) {
                 actionCore.startToWork(login);
             }, secret, function (errorCode) {
                 if (errorCode == 409) {
@@ -139,7 +139,7 @@ var actionLogin = {
             grecaptcha.reset(actionLogin.grecaptcha);
         } else {
             actionLogin.grecaptcha = grecaptcha.render("captcha", {
-                sitekey: "6LdHERcTAAAAAGhYNorYFJAtkLjzbyAGo92SAsfH",
+                sitekey: siteKeyPublic,
                 callback: function () {
                     if (typeof actionLogin.recaptchaCallback == "function") {
                         actionLogin.recaptchaCallback();
@@ -156,7 +156,7 @@ var actionLogin = {
             actionLogin.recaptchaCallback = function () {
                 return function () {
                     addClass(byId("captcha"), "hide");
-                    ajax("/api/reg/restore/" + byTag(byId("loginForm"), "INPUT")[0].value, function () {
+                    ajax(apiBase + "/api/reg/restore/" + byTag(byId("loginForm"), "INPUT")[0].value, function () {
                         drawMessage("<br>На " + byTag(byId("loginForm"), "INPUT")[0].value + " надіслано email для зміни пароля<br><br>");
                         actionLogin.goToLogin();
                     }, grecaptcha.getResponse(), function (errorCode) {
@@ -181,7 +181,7 @@ var actionLogin = {
                 if (byId("newPassword").value.length < 6) {
                     rmClass(byClass(byId("newPassword").parentNode, "error")[0], "hide");
                 } else {
-                    ajax("/api/reg/restoreFinish/" + secret, function () {
+                    ajax(apiBase + "/api/reg/restoreFinish/" + secret, function () {
                         drawMessage("<br>Пароль успішно змінений!<br><br>");
                         window.history.replaceState({renderMode: "login"}, "", "/");
                     }, byId("newPassword").value, function (errorCode) {

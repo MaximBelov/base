@@ -104,7 +104,7 @@ var actionWizard = {
             "</span></div>";
     },
     disableWizard: function(){
-        ajax("/api/login/wizard", function () {
+        ajax(apiBase + "/api/login/wizard", function () {
             // deactivate wizard for this user.
         }, "", function(){
 

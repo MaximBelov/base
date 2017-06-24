@@ -69,7 +69,7 @@ cm = {
     },
 
     changeName:function(){
-        ajax("/api/company/name",function(result){
+        ajax(apiBase + "/api/company/name",function(result){
             userConfig.company.name = result;
             byTag(byId("companyName"),"SPAN")[0].innerHTML = result;
             drawMessage("<br>Назви змінено на "+result+"<br><br>");
@@ -99,7 +99,7 @@ cm = {
             foreach(emails, function(e){
                 request.push({email:e, role: mode});
             });
-            ajax("/api/company/invite", function (result) {
+            ajax(apiBase + "/api/company/invite", function (result) {
                 userConfig.company.employee = JSON.parse(result);
                 cm.drawEmployeeList();
             }, JSON.stringify(request), function () {})
@@ -110,7 +110,7 @@ cm = {
     fire: function (email, status) {
         if (userConfig.company.iamboss && email != userConfig.login) {
             if (confirm((status == 0 ? "Відізвати запрощення людини?" : "Видалити людину з групи?"))) {
-                ajax("/api/company/remove/" + email, function (result) {
+                ajax(apiBase + "/api/company/remove/" + email, function (result) {
                     userConfig.company.employee = JSON.parse(result);
                     cm.drawEmployeeList();
                 }, null, function () {}, "DELETE")
@@ -125,7 +125,7 @@ cm = {
             email = userConfig.login;
         }
         if (confirm("Вийти? Увага, документи отримані в компанії будуть недоступні.")) {
-            ajax("/api/company/remove/" + email, function () {
+            ajax(apiBase + "/api/company/remove/" + email, function () {
                 userConfig.company.login = userConfig.login;
                 window.documentsCollection.reset();
                 if (byId("messageBG")) {
@@ -139,7 +139,7 @@ cm = {
 
     deleteGroup:function(){
         if (confirm("Вийти з групи та розформувати її? (усі документи повернуться до авторів)")) {
-            ajax("/api/company/drop/", function () {
+            ajax(apiBase + "/api/company/drop/", function () {
                 userConfig.company.login = userConfig.login;
                 window.documentsCollection.reset();
                 userConfig.company.id = null;
@@ -349,7 +349,7 @@ cm = {
                             stopBubble(event);
                             var email = e.login;
                             if (confirm("Видалити історію перебування та повернути документи власнику?")) {
-                                ajax("/api/company/return/" + email, function () {
+                                ajax(apiBase + "/api/company/return/" + email, function () {
                                     userConfig.company.employee.splice(userConfig.company.employee.indexOf(email),1);
                                     cm.drawEmployeeList();
                                 }, null, function () {}, "DELETE")
