@@ -182,7 +182,7 @@ actionDoc = {
             }
             progress.style.width = percent + "%";
         };
-        xhr.open("POST", "/upload", true);
+        xhr.open("POST", "http://localhost:8888/upload", true);
         xhr.setRequestHeader("sessionid", localStorage.getItem("sessionId"));
         xhr.setRequestHeader("v", version);
         xhr.setRequestHeader("filename", encodeURI(f[index].name));
